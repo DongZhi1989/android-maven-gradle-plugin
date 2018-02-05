@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.gradle.util;
 
-import org.gradle.internal.time.TimeProvider;
+import groovy.lang.Closure;
 
-public class MockTimeProvider implements TimeProvider {
-
-    long current;
-
-    public MockTimeProvider() {
-        this(System.currentTimeMillis());
+public class AlwaysTrue extends Closure<Boolean> {
+    public AlwaysTrue() {
+        super(null);
     }
 
-    public MockTimeProvider(long startTime) {
-        current = startTime;
+    public AlwaysTrue(Object owner, Object thisObject) {
+        super(owner, thisObject);
     }
 
-    public void increment(long diff) {
-        current += diff;
+    public AlwaysTrue(Object owner) {
+        super(owner);
     }
 
-    /** Increments the time by 10ms and returns it. */
     @Override
-    public long getCurrentTime() {
-        current += 10L;
-        return current;
+    public Boolean call() {
+        return true;
     }
 
-    /** Increments the time by 10ms and returns it. */
     @Override
-    public long getCurrentTimeForDuration() {
-        return getCurrentTime();
+    public Boolean call(Object... args) {
+        return true;
+    }
+
+    @Override
+    public Boolean call(Object arguments) {
+        return true;
+    }
+
+    public Boolean doCall() {
+        return true;
     }
 }

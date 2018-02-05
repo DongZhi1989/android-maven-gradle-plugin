@@ -21,6 +21,8 @@ import org.gradle.api.tasks.util.PatternSet;
 import org.gradle.api.tasks.util.internal.PatternSets;
 import org.gradle.internal.Factory;
 import org.gradle.internal.nativeintegration.filesystem.FileSystem;
+import org.gradle.internal.resource.local.FileResourceConnector;
+import org.gradle.internal.resource.local.FileResourceRepository;
 import org.gradle.process.internal.DefaultExecActionFactory;
 import org.gradle.process.internal.ExecActionFactory;
 import org.gradle.process.internal.ExecHandleFactory;
@@ -41,6 +43,10 @@ public class TestFiles {
         return FILE_SYSTEM;
     }
 
+    public static FileResourceRepository fileRepository() {
+        return new FileResourceConnector(FILE_SYSTEM);
+    }
+
     /**
      * Returns a resolver with no base directory.
      */
@@ -56,7 +62,7 @@ public class TestFiles {
     }
 
     public static DirectoryFileTreeFactory directoryFileTreeFactory() {
-        return new DefaultDirectoryFileTreeFactory();
+        return new DefaultDirectoryFileTreeFactory(getPatternSetFactory(), fileSystem());
     }
 
     public static FileCollectionFactory fileCollectionFactory() {
@@ -89,5 +95,9 @@ public class TestFiles {
 
     public static Factory<PatternSet> getPatternSetFactory() {
         return resolver().getPatternSetFactory();
+    }
+
+    public static String systemSpecificAbsolutePath(String path) {
+        return new File(path).getAbsolutePath();
     }
 }

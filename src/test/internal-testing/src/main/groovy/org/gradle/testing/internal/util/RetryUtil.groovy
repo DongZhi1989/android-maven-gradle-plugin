@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package org.gradle.testing.internal.util;
+package org.gradle.testing.internal.util
 
-public class RetryFailure extends AssertionError {
+final class RetryUtil {
+    private RetryUtil() {}
 
-    private static final String MESSAGE = "Test failed despite retries";
+    static int retry(int retries = 3, Closure closure) {
+        int retryCount = 0
+        Throwable lastException = null
 
-    public RetryFailure(Throwable cause) {
-        super(MESSAGE, cause);
+        while (retryCount++ < retries) {
+            try {
+                closure.call()
+                return retryCount
+            } catch (Throwable e) {
+                lastException = e
+            }
+        }
+
+        // Retry count exceeded, throwing last exception
+        throw lastException
     }
 }
